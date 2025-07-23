@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AUTOSAR xmlns="http://autosar.org/schema/r4.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_4-3-0.xsd">
+    <AR-PACKAGES>
+        <AR-PACKAGE>
+            <SHORT-NAME>MyProject</SHORT-NAME>
+            <ELEMENTS>
+                </ELEMENTS>
+        </AR-PACKAGE>
+    </AR-PACKAGES>
+</AUTOSAR>
+
+<IMPLEMENTATION-DATA-TYPE>
+    <SHORT-NAME>uint16</SHORT-NAME>
+    <CATEGORY>VALUE</CATEGORY>
+</IMPLEMENTATION-DATA-TYPE>
+<IMPLEMENTATION-DATA-TYPE>
+    <SHORT-NAME>boolean</SHORT-NAME>
+    <CATEGORY>VALUE</CATEGORY>
+</IMPLEMENTATION-DATA-TYPE>
+
+<SENDER-RECEIVER-INTERFACE>
+    <SHORT-NAME>IF_VehicleSpeed</SHORT-NAME>
+    <DATA-ELEMENTS>
+        <VARIABLE-DATA-PROTOTYPE>
+            <SHORT-NAME>VehicleSpeed_Kph</SHORT-NAME>
+            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/MyProject/uint16</TYPE-TREF>
+        </VARIABLE-DATA-PROTOTYPE>
+    </DATA-ELEMENTS>
+</SENDER-RECEIVER-INTERFACE>
+
+<SENDER-RECEIVER-INTERFACE>
+    <SHORT-NAME>IF_SeatbeltStatus</SHORT-NAME>
+    <DATA-ELEMENTS>
+        <VARIABLE-DATA-PROTOTYPE>
+            <SHORT-NAME>IsSeatbeltFastened</SHORT-NAME>
+            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/MyProject/boolean</TYPE-TREF>
+        </VARIABLE-DATA-PROTOTYPE>
+    </DATA-ELEMENTS>
+</SENDER-RECEIVER-INTERFACE>
+
+<SENDER-RECEIVER-INTERFACE>
+    <SHORT-NAME>IF_WarningLight</SHORT-NAME>
+    <DATA-ELEMENTS>
+        <VARIABLE-DATA-PROTOTYPE>
+            <SHORT-NAME>IsWarningLightActive</SHORT-NAME>
+            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/MyProject/boolean</TYPE-TREF>
+        </VARIABLE-DATA-PROTOTYPE>
+    </DATA-ELEMENTS>
+</SENDER-RECEIVER-INTERFACE>
+
+<APPLICATION-SW-COMPONENT-TYPE>
+    <SHORT-NAME>SeatbeltReminder_SWC</SHORT-NAME>
+    <PORTS>
+        <R-PORT-PROTOTYPE>
+            <SHORT-NAME>R_VehicleSpeed</SHORT-NAME>
+            <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/MyProject/IF_VehicleSpeed</REQUIRED-INTERFACE-TREF>
+        </R-PORT-PROTOTYPE>
+        <R-PORT-PROTOTYPE>
+            <SHORT-NAME>R_SeatbeltStatus</SHORT-NAME>
+            <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/MyProject/IF_SeatbeltStatus</REQUIRED-INTERFACE-TREF>
+        </R-PORT-PROTOTYPE>
+        <P-PORT-PROTOTYPE>
+            <SHORT-NAME>P_WarningLight</SHORT-NAME>
+            <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/MyProject/IF_WarningLight</PROVIDED-INTERFACE-TREF>
+        </P-PORT-PROTOTYPE>
+    </PORTS>
+</APPLICATION-SW-COMPONENT-TYPE>
+
+<INTERNAL-BEHAVIORS>
+    <SWC-INTERNAL-BEHAVIOR>
+        <SHORT-NAME>IB_SeatbeltReminder</SHORT-NAME>
+        <EVENTS>
+            <TIMING-EVENT>
+                <SHORT-NAME>TE_100ms</SHORT-NAME>
+                <START-ON-EVENT-REF DEST="RUNNABLE-ENTITY">/MyProject/SeatbeltReminder_SWC/IB_SeatbeltReminder/RE_MainFunction_100ms</START-ON-EVENT-REF>
+                <PERIOD>0.1</PERIOD> </TIMING-EVENT>
+        </EVENTS>
+        <RUNNABLES>
+            <RUNNABLE-ENTITY>
+                <SHORT-NAME>RE_MainFunction_100ms</SHORT-NAME>
+                <MINIMUM-START-INTERVAL>0</MINIMUM-START-INTERVAL>
+                <CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
+                <DATA-RECEIVE-POINT-BY-ARGUMENTS>
+                    <VARIABLE-ACCESS>
+                        <SHORT-NAME>DRP_VehicleSpeed</SHORT-NAME>
+                        <ACCESSED-VARIABLE>
+                            <AUTOSAR-VARIABLE-IREF>
+                                <PORT-PROTOTYPE-REF DEST="R-PORT-PROTOTYPE">/MyProject/SeatbeltReminder_SWC/R_VehicleSpeed</PORT-PROTOTYPE-REF>
+                                <TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/MyProject/IF_VehicleSpeed/VehicleSpeed_Kph</TARGET-DATA-PROTOTYPE-REF>
+                            </AUTOSAR-VARIABLE-IREF>
+                        </ACCESSED-VARIABLE>
+                    </VARIABLE-ACCESS>
+                    <VARIABLE-ACCESS>
+                        <SHORT-NAME>DRP_SeatbeltStatus</SHORT-NAME>
+                        <ACCESSED-VARIABLE>
+                             <AUTOSAR-VARIABLE-IREF>
+                                <PORT-PROTOTYPE-REF DEST="R-PORT-PROTOTYPE">/MyProject/SeatbeltReminder_SWC/R_SeatbeltStatus</PORT-PROTOTYPE-REF>
+                                <TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/MyProject/IF_SeatbeltStatus/IsSeatbeltFastened</TARGET-DATA-PROTOTYPE-REF>
+                            </AUTOSAR-VARIABLE-IREF>
+                        </ACCESSED-VARIABLE>
+                    </VARIABLE-ACCESS>
+                </DATA-RECEIVE-POINT-BY-ARGUMENTS>
+                <DATA-SEND-POINTS>
+                    <VARIABLE-ACCESS>
+                        <SHORT-NAME>DSP_WarningLight</SHORT-NAME>
+                         <ACCESSED-VARIABLE>
+                            <AUTOSAR-VARIABLE-IREF>
+                                <PORT-PROTOTYPE-REF DEST="P-PORT-PROTOTYPE">/MyProject/SeatbeltReminder_SWC/P_WarningLight</PORT-PROTOTYPE-REF>
+                                <TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/MyProject/IF_WarningLight/IsWarningLightActive</TARGET-DATA-PROTOTYPE-REF>
+                            </AUTOSAR-VARIABLE-IREF>
+                        </ACCESSED-VARIABLE>
+                    </VARIABLE-ACCESS>
+                </DATA-SEND-POINTS>
+                <SYMBOL>RE_MainFunction_100ms</SYMBOL>
+            </RUNNABLE-ENTITY>
+        </RUNNABLES>
+    </SWC-INTERNAL-BEHAVIOR>
+</INTERNAL-BEHAVIORS>
