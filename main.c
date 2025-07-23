@@ -5,21 +5,24 @@
 
 // Declare the global mode variable defined in rte_stubs.c
 extern uint8 G_currentEcuMode;
+extern boolean G_simulateVehicleSpeedFault;
 
 int main() {
     printf("--- SWC Test Runner Initialized ---\n\n");
 
-    // === SCENARIO 1: ECU is in RUN Mode ===
-    printf("--- SETTING ECU MODE TO: RUN ---\n");
+    // === SCENARIO 1: Normal Operation ===
+    printf("--- SCENARIO: Normal Operation (No Faults) ---\n");
     G_currentEcuMode = RTE_MODE_MDG_EcuMode_ECU_RUN;
-    printf("--- Simulating OS Tick 1 (Calling Runnable) ---\n");
-    RE_MainFunction_100ms();
+    G_simulateVehicleSpeedFault = FALSE; // Ensure no fault is active
+    RE_MainFunction_100ms(); // Call the runnable
 
-    // === SCENARIO 2: ECU is in SLEEP Mode ===
-    printf("\n--- SETTING ECU MODE TO: SLEEP ---\n");
-    G_currentEcuMode = RTE_MODE_MDG_EcuMode_ECU_SLEEP;
-    printf("--- Simulating OS Tick 2 (Calling Runnable) ---\n");
-    RE_MainFunction_100ms();
+    printf("\n"); // Add a space between scenarios
+
+    // === SCENARIO 2: Vehicle Speed Sensor Fault ===
+    printf("--- SCENARIO: Vehicle Speed Sensor Fault ---\n");
+    G_currentEcuMode = RTE_MODE_MDG_EcuMode_ECU_RUN; // Still in RUN mode
+    G_simulateVehicleSpeedFault = TRUE; // Activate the fault
+    RE_MainFunction_100ms(); // Call the runnable again
 
     printf("\n--- SWC Test Runner Finished ---\n");
     return 0;

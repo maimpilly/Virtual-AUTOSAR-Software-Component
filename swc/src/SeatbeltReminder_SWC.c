@@ -22,24 +22,23 @@ void RE_MainFunction_100ms(void)
         (void)Rte_Prm_P_SpeedThreshold_SpeedThreshold_Kph(&speed_threshold); // Speed threshold
         // 4. Read data from the input ports using the RTE API
         status_speed = Rte_Read_R_VehicleSpeed_VehicleSpeed_Kph(&vehicle_speed);
-        status_seatbelt = Rte_Read_R_SeatbeltStatus_IsSeatbeltFastened(&is_seatbelt_fastened);
+        // First, check the status of the speed sensor reading
+        if (status_speed == RTE_E_OK) {
+            // If the reading was successful, report PASSED to the Dem
+            (void)Rte_SetEventStatus(EV_VehicleSpeedSignalLost, DEM_EVENT_STATUS_PASSED);
 
-        // 5. Implement the core logic
-        if ((status_speed == RTE_E_OK) && (status_seatbelt == RTE_E_OK))
-        {
-            if ((vehicle_speed > speed_threshold) && (is_seatbelt_fastened == FALSE))
-            {
-                (void)Rte_Write_P_WarningLight_IsWarningLightActive(TRUE);
+            // Rest of the component's logic
+            status_seatbelt = Rte_Read_R_SeatbeltStatus_IsSeatbeltFastened(&is_seatbelt_fastened);
+            if (status_seatbelt == RTE_E_OK) {
+                if ((vehicle_speed > speed_threshold) && (is_seatbelt_fastened == FALSE)) {
+                    (void)Rte_Write_P_WarningLight_IsWarningLightActive(TRUE);
+                } else {
+                    (void)Rte_Write_P_WarningLight_IsWarningLightActive(FALSE);
+                }
             }
-            else
-            {
-                (void)Rte_Write_P_WarningLight_IsWarningLightActive(FALSE);
-            }
+        } else {
+            // If the speed reading failed, report FAILED immediately. Do nothing else.
+            (void)Rte_SetEventStatus(EV_VehicleSpeedSignalLost, DEM_EVENT_STATUS_FAILED);
         }
-    }
-    else
-    {
-        // If not in RUN mode, ensure the warning light is off
-        (void)Rte_Write_P_WarningLight_IsWarningLightActive(FALSE);
     }
 }

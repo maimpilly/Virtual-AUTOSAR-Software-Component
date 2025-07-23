@@ -5,8 +5,16 @@
 // Global variable to simulate the ECU's current mode
 uint8 G_currentEcuMode = RTE_MODE_MDG_EcuMode_ECU_RUN; // Start in RUN mode
 
+// Global variable to simulate a failure
+boolean G_simulateVehicleSpeedFault = FALSE;
+
 // Simulate the vehicle speed port
 Std_ReturnType Rte_Read_R_VehicleSpeed_VehicleSpeed_Kph(uint16* data) {
+    if (G_simulateVehicleSpeedFault == TRUE)
+    {
+        printf("RTE STUB: Simulating fault for VehicleSpeed. Returning NO DATA.\n");
+        return RTE_E_NO_DATA; // Return error code
+    }
     *data = 25; // Hardcode speed to 25 kph for this test
     printf("RTE STUB: Reading VehicleSpeed: %d kph\n", *data);
     return RTE_E_OK; // Return OK status
@@ -38,5 +46,12 @@ Std_ReturnType Rte_Switch_R_EcuMode_currentMode(uint8* mode) {
 Std_ReturnType Rte_Prm_P_SpeedThreshold_SpeedThreshold_Kph(uint16* value) {
     *value = 10; // Simulate a calibrated value of 10 kph
     printf("RTE STUB: Reading SpeedThreshold Parameter: %d kph\n", *value);
+    return RTE_E_OK;
+}
+
+Std_ReturnType Rte_SetEventStatus(uint8 EventId, uint8 EventStatus) {
+    printf("DEM STUB: Received Event ID %d with Status: %s\n",
+           EventId,
+           EventStatus == DEM_EVENT_STATUS_PASSED ? "PASSED" : "FAILED");
     return RTE_E_OK;
 }

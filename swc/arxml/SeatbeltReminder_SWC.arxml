@@ -26,6 +26,14 @@
                         </PARAMETER-DATA-PROTOTYPE>
                     </PARAMETERS>
                 </PARAMETER-INTERFACE>
+                <DIAGNOSTIC-EVENT-INTERFACE>
+                    <SHORT-NAME>IF_Dem_VehicleSpeed</SHORT-NAME>
+                    <DIAGNOSTIC-EVENTS>
+                        <DIAGNOSTIC-EVENT>
+                            <SHORT-NAME>EV_VehicleSpeedSignalLost</SHORT-NAME>
+                        </DIAGNOSTIC-EVENT>
+                    </DIAGNOSTIC-EVENTS>
+                </DIAGNOSTIC-EVENT-INTERFACE>
             </ELEMENTS>
         </AR-PACKAGE>
     </AR-PACKAGES>
@@ -97,6 +105,10 @@
         <P-PORT-PROTOTYPE>
             <SHORT-NAME>P_SpeedThreshold</SHORT-NAME>
             <PROVIDED-INTERFACE-TREF DEST="PARAMETER-INTERFACE">/MyProject/IF_SpeedThreshold</PROVIDED-INTERFACE-TREF>
+        </P-PORT-PROTOTYPE>
+        <P-PORT-PROTOTYPE>
+            <SHORT-NAME>P_Dem_VehicleSpeed</SHORT-NAME>
+            <PROVIDED-INTERFACE-TREF DEST="DIAGNOSTIC-EVENT-INTERFACE">/MyProject/IF_Dem_VehicleSpeed</PROVIDED-INTERFACE-TREF>
         </P-PORT-PROTOTYPE>
     </PORTS>
 </APPLICATION-SW-COMPONENT-TYPE>

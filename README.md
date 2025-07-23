@@ -118,3 +118,9 @@ The repository is organized to separate the SWC deliverables from the simulation
 * The hardcoded speed threshold (`5`) has been replaced with a formal calibration parameter.
 * The SWC now reads the threshold value from the RTE using the standard `Rte_Prm_` API, making the component's logic independent of the specific value.
 * This demonstrates a key automotive concept: separating software logic from calibration data for flexibility and reusability across different vehicle platforms.
+
+### v1.3 - Diagnostic Fault Reporting
+* The SWC is now robust against sensor input failures.
+* It monitors the return status of the `Rte_Read` API call for the vehicle speed sensor.
+* If the reading fails, it reports a `FAILED` status to the Diagnostic Event Manager (Dem). On success, it reports `PASSED`.
+* Demonstrates AUTOSAR diagnostics, fault detection, and robust error handling.
