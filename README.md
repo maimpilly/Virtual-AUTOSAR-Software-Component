@@ -114,3 +114,7 @@ The repository is organized to separate the SWC deliverables from the simulation
 * Component logic is only executed when the system is in the `ECU_RUN` mode, ensuring safe and efficient operation.
 * The test harness has been updated to simulate mode switches and validate the component's state-dependent behavior.
 
+### v1.2 - Parameter Calibration
+* The hardcoded speed threshold (`5`) has been replaced with a formal calibration parameter.
+* The SWC now reads the threshold value from the RTE using the standard `Rte_Prm_` API, making the component's logic independent of the specific value.
+* This demonstrates a key automotive concept: separating software logic from calibration data for flexibility and reusability across different vehicle platforms.

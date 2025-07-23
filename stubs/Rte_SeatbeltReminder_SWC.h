@@ -14,7 +14,10 @@ Std_ReturnType Rte_Read_R_VehicleSpeed_VehicleSpeed_Kph(uint16* data);
 Std_ReturnType Rte_Read_R_SeatbeltStatus_IsSeatbeltFastened(boolean* data);
 Std_ReturnType Rte_Write_P_WarningLight_IsWarningLightActive(boolean data);
 
-// Add new function declaration for the RTE Switch API
+// New function declaration for the RTE Switch API
 Std_ReturnType Rte_Switch_R_EcuMode_currentMode(uint8* mode);
+
+// New function prototype for the new Rte_Prm API 
+Std_ReturnType Rte_Prm_P_SpeedThreshold_SpeedThreshold_Kph(uint16* value);
 
 #endif // RTE_SEATBELTREMINDER_SWC_H

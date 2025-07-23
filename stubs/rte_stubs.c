@@ -32,3 +32,11 @@ Std_ReturnType Rte_Switch_R_EcuMode_currentMode(uint8* mode) {
     printf("RTE STUB: Reading EcuMode: %s\n", *mode == RTE_MODE_MDG_EcuMode_ECU_RUN ? "RUN" : "SLEEP");
     return RTE_E_OK;
 }
+
+// Function simulates what the AUTOSAR BSW would do in a real ECU: provide the actual calibration value. 
+// By setting it to 10, we can test if our SWC correctly uses this new value instead of the old hardcoded one.
+Std_ReturnType Rte_Prm_P_SpeedThreshold_SpeedThreshold_Kph(uint16* value) {
+    *value = 10; // Simulate a calibrated value of 10 kph
+    printf("RTE STUB: Reading SpeedThreshold Parameter: %d kph\n", *value);
+    return RTE_E_OK;
+}

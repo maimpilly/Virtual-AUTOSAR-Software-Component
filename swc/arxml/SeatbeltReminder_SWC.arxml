@@ -17,6 +17,15 @@
                         </MODE-DECLARATION>
                     </MODE-DECLARATIONS>
                 </MODE-DECLARATION-GROUP>
+                <PARAMETER-INTERFACE>
+                    <SHORT-NAME>IF_SpeedThreshold</SHORT-NAME>
+                    <PARAMETERS>
+                        <PARAMETER-DATA-PROTOTYPE>
+                            <SHORT-NAME>SpeedThreshold_Kph</SHORT-NAME>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/MyProject/uint16</TYPE-TREF>
+                        </PARAMETER-DATA-PROTOTYPE>
+                    </PARAMETERS>
+                </PARAMETER-INTERFACE>
             </ELEMENTS>
         </AR-PACKAGE>
     </AR-PACKAGES>
@@ -85,6 +94,10 @@
                 </MODE-SWITCH-RECEIVER-COM-SPEC>
             </REQUIRED-COM-SPECS>
         </R-PORT-PROTOTYPE>
+        <P-PORT-PROTOTYPE>
+            <SHORT-NAME>P_SpeedThreshold</SHORT-NAME>
+            <PROVIDED-INTERFACE-TREF DEST="PARAMETER-INTERFACE">/MyProject/IF_SpeedThreshold</PROVIDED-INTERFACE-TREF>
+        </P-PORT-PROTOTYPE>
     </PORTS>
 </APPLICATION-SW-COMPONENT-TYPE>
 
