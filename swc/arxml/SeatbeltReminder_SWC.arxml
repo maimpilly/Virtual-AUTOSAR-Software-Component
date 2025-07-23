@@ -6,7 +6,18 @@
         <AR-PACKAGE>
             <SHORT-NAME>MyProject</SHORT-NAME>
             <ELEMENTS>
-                </ELEMENTS>
+                <MODE-DECLARATION-GROUP>
+                    <SHORT-NAME>MDG_EcuMode</SHORT-NAME>
+                    <MODE-DECLARATIONS>
+                        <MODE-DECLARATION>
+                            <SHORT-NAME>ECU_RUN</SHORT-NAME>
+                        </MODE-DECLARATION>
+                        <MODE-DECLARATION>
+                            <SHORT-NAME>ECU_SLEEP</SHORT-NAME>
+                        </MODE-DECLARATION>
+                    </MODE-DECLARATIONS>
+                </MODE-DECLARATION-GROUP>
+            </ELEMENTS>
         </AR-PACKAGE>
     </AR-PACKAGES>
 </AUTOSAR>
@@ -65,6 +76,15 @@
             <SHORT-NAME>P_WarningLight</SHORT-NAME>
             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/MyProject/IF_WarningLight</PROVIDED-INTERFACE-TREF>
         </P-PORT-PROTOTYPE>
+        <R-PORT-PROTOTYPE>
+            <SHORT-NAME>R_EcuMode</SHORT-NAME>
+            <REQUIRED-COM-SPECS>
+                <MODE-SWITCH-RECEIVER-COM-SPEC>
+                    <ENHANCED-MODE-API>false</ENHANCED-MODE-API>
+                    <MODE-GROUP-REF DEST="MODE-DECLARATION-GROUP">/MyProject/MDG_EcuMode</MODE-GROUP-REF>
+                </MODE-SWITCH-RECEIVER-COM-SPEC>
+            </REQUIRED-COM-SPECS>
+        </R-PORT-PROTOTYPE>
     </PORTS>
 </APPLICATION-SW-COMPONENT-TYPE>
 

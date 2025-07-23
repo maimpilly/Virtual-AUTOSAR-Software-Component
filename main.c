@@ -1,16 +1,26 @@
 // File: main.c
 #include <stdio.h>
-#include "SeatbeltReminder_SWC.h" // Your component's header
+#include "SeatbeltReminder_SWC.h"
+#include "Rte_SeatbeltReminder_SWC.h" // Include to get mode definitions
+
+// Declare the global mode variable defined in rte_stubs.c
+extern uint8 G_currentEcuMode;
 
 int main() {
-    printf("--- SWC Test Runner Initialized ---\n");
+    printf("--- SWC Test Runner Initialized ---\n\n");
 
-    // Simulate calling the runnable 3 times
-    for (int i = 0; i < 3; i++) {
-        printf("--- Simulating OS Tick %d (Calling Runnable) ---\n", i + 1);
-        RE_MainFunction_100ms(); // This calls your SWC's main logic
-    }
+    // === SCENARIO 1: ECU is in RUN Mode ===
+    printf("--- SETTING ECU MODE TO: RUN ---\n");
+    G_currentEcuMode = RTE_MODE_MDG_EcuMode_ECU_RUN;
+    printf("--- Simulating OS Tick 1 (Calling Runnable) ---\n");
+    RE_MainFunction_100ms();
 
-    printf("--- SWC Test Runner Finished ---\n");
+    // === SCENARIO 2: ECU is in SLEEP Mode ===
+    printf("\n--- SETTING ECU MODE TO: SLEEP ---\n");
+    G_currentEcuMode = RTE_MODE_MDG_EcuMode_ECU_SLEEP;
+    printf("--- Simulating OS Tick 2 (Calling Runnable) ---\n");
+    RE_MainFunction_100ms();
+
+    printf("\n--- SWC Test Runner Finished ---\n");
     return 0;
 }

@@ -2,6 +2,9 @@
 #include <stdio.h> // For printing to the console
 #include "Rte_SeatbeltReminder_SWC.h"
 
+// Global variable to simulate the ECU's current mode
+uint8 G_currentEcuMode = RTE_MODE_MDG_EcuMode_ECU_RUN; // Start in RUN mode
+
 // Simulate the vehicle speed port
 Std_ReturnType Rte_Read_R_VehicleSpeed_VehicleSpeed_Kph(uint16* data) {
     *data = 25; // Hardcode speed to 25 kph for this test
@@ -20,5 +23,12 @@ Std_ReturnType Rte_Read_R_SeatbeltStatus_IsSeatbeltFastened(boolean* data) {
 Std_ReturnType Rte_Write_P_WarningLight_IsWarningLightActive(boolean data) {
     // Instead of turning on a real light, we just print the state
     printf("RTE STUB: Writing IsWarningLightActive -> %s\n\n", data == TRUE ? "TRUE" : "FALSE");
+    return RTE_E_OK;
+}
+
+// Implementation of the new Rte_Switch function
+Std_ReturnType Rte_Switch_R_EcuMode_currentMode(uint8* mode) {
+    *mode = G_currentEcuMode; // Provide the current mode to the SWC
+    printf("RTE STUB: Reading EcuMode: %s\n", *mode == RTE_MODE_MDG_EcuMode_ECU_RUN ? "RUN" : "SLEEP");
     return RTE_E_OK;
 }

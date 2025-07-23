@@ -109,3 +109,8 @@ The repository is organized to separate the SWC deliverables from the simulation
 
 ***
 
+### v1.1 - Mode Management
+* The SWC is now aware of the ECU's operational state (`ECU_RUN`, `ECU_SLEEP`).
+* Component logic is only executed when the system is in the `ECU_RUN` mode, ensuring safe and efficient operation.
+* The test harness has been updated to simulate mode switches and validate the component's state-dependent behavior.
+
