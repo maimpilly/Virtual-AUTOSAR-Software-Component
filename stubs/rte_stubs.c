@@ -5,6 +5,8 @@
 // Global variable to simulate the ECU's current mode
 uint8 G_currentEcuMode = RTE_MODE_MDG_EcuMode_ECU_RUN; // Start in RUN mode
 
+uint16 G_speedThresholdCal = 10; // Default calibration value
+
 // Global variable to simulate a failure
 boolean G_simulateVehicleSpeedFault = FALSE;
 
@@ -44,7 +46,7 @@ Std_ReturnType Rte_Switch_R_EcuMode_currentMode(uint8* mode) {
 // Function simulates what the AUTOSAR BSW would do in a real ECU: provide the actual calibration value. 
 // By setting it to 10, we can test if our SWC correctly uses this new value instead of the old hardcoded one.
 Std_ReturnType Rte_Prm_P_SpeedThreshold_SpeedThreshold_Kph(uint16* value) {
-    *value = 10; // Simulate a calibrated value of 10 kph
+    *value = G_speedThresholdCal; // Simulate a calibrated value of 10 kph
     printf("RTE STUB: Reading SpeedThreshold Parameter: %d kph\n", *value);
     return RTE_E_OK;
 }

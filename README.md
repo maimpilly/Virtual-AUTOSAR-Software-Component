@@ -1,126 +1,111 @@
-# Virtual AUTOSAR SWC: Seatbelt Reminder
+# Virtual AUTOSAR SWC: A Seatbelt Reminder
 
 ![Language](https://img.shields.io/badge/Language-C-blue.svg)
 ![Standard](https://img.shields.io/badge/Standard-AUTOSAR-orange.svg)
+![Version](https://img.shields.io/badge/Version-2.0-brightgreen.svg)
 
-## Project Overview
+## About This Project
 
-This project is a complete, virtual development of an AUTOSAR Application Software Component (SWC) from design to implementation and testing. The goal is to demonstrate a thorough understanding of the AUTOSAR methodology, component-based design, and the standard development workflow used in the automotive industry.
+This repository documents my journey in building a complete AUTOSAR Application Software Component (SWC) from the ground up. The goal was to go beyond simple coding and dive deep into the AUTOSAR methodology, demonstrating how real-world automotive software is designed, implemented, and tested.
 
-The entire project is self-contained and developed in a virtual environment, proving the ability to create and validate software components without the need for physical ECU hardware.
-
-***
-
-## SWC Design Specification
-
-### Component Purpose
-
-The `SeatbeltReminder_SWC` is designed to monitor vehicle speed and driver seatbelt status. It activates a dashboard warning light if the vehicle is moving faster than a predefined threshold (5 kph) while the seatbelt is unfastened.
-
-### Ports
-
-| Port Name          | Direction | Interface           | Description                                |
-| :----------------- | :-------: | :------------------ | :----------------------------------------- |
-| `R_VehicleSpeed`   | Required  | `IF_VehicleSpeed`   | Receives the current vehicle speed.        |
-| `R_SeatbeltStatus` | Required  | `IF_SeatbeltStatus` | Receives the driver's seatbelt status.     |
-| `P_WarningLight`   | Provided  | `IF_WarningLight`   | Sends the activation status for the warning light. |
-
-### Interfaces & Data Types
-
-| Interface           | Data Element           | Data Type |
-| :------------------ | :--------------------- | :-------: |
-| `IF_VehicleSpeed`   | `VehicleSpeed_Kph`     | `uint16`  |
-| `IF_SeatbeltStatus` | `IsSeatbeltFastened`   | `boolean` |
-| `IF_WarningLight`   | `IsWarningLightActive` | `boolean` |
-
-### Internal Behavior
-
-The component contains a single runnable entity that implements the control logic.
-
-* **Runnable:** `RE_MainFunction_100ms`
-* **Trigger:** Activated by a periodic **Timing Event** every **100 milliseconds**.
+The entire project was developed in a virtual environment, without any physical hardware. This proves an understanding of the development workflow and the ability to create robust, testable software components.
 
 ***
 
-## Project Structure
+## My Development & Testing Strategy
 
-The repository is organized to separate the SWC deliverables from the simulation environment.
-```
-.
-├── swc/
-│   ├── arxml/
-│   │   └── SeatbeltReminder_SWC.arxml   (AUTOSAR Component Description)
-│   ├── include/
-│   │   └── SeatbeltReminder_SWC.h       (SWC Public Header)
-│   └── src/
-│       └── SeatbeltReminder_SWC.c       (SWC Implementation)
-│
-├── stubs/
-│   ├── Rte_SeatbeltReminder_SWC.h     (Simulated RTE Header)
-│   ├── Std_Types.h                    (Simulated AUTOSAR Types)
-│   └── rte_stubs.c                    (Simulated RTE Functions)
-│
-├── main.c                               (Test Runner/Harness)
-├── .gitignore                           (Ignores build artifacts)
-└── README.md                            (Project Documentation)
-```
+To simulate the environment, I structured the project into three distinct parts, each with a clear role:
+
+#### 1. The Component (`swc/`)
+This is the core product: the `SeatbeltReminder_SWC`. Designed it as a self-contained "black box" that fulfills its requirements based on inputs from the AUTOSAR Run-Time Environment (RTE). 
+
+#### 2. The Simulated Car (`stubs/`)
+The stubs represent the **rest of the car** from the component's perspective. The `rte_stubs.c` file simulates the RTE and the underlying Basic Software (BSW), providing the necessary inputs like sensor data, ECU modes, and calibration values. This helps to create a configurable "real world" for the component to work.
+
+#### 3. The Test Engineer (`main.c`)
+The `main.c` file is my **test script orchestrator**. Its job is to manipulate the state of the "Simulated Car" (by changing variables in the stubs) and then trigger the component to see how it reacts. This approach allowed me to create specific, repeatable test scenarios to validate every feature that was built.
+
+***
+
+## Final Component Design (`v2.0`)
+
+The `SeatbeltReminder_SWC` evolved from a simple reminder to a robust component aware of its environment.
+
+* **Purpose:** To activate a warning light if the vehicle is moving faster than a configurable speed threshold while the seatbelt is unfastened. It only operates when the ECU is in a `RUN` state and can report sensor failures to the diagnostic system.
+
+* **Ports & Interfaces:**
+
+| Port Name            | Type        | Direction | Interface           | Description                                          |
+| :------------------- | :---------- | :-------: | :------------------ | :--------------------------------------------------- |
+| `R_VehicleSpeed`     | S/R         | Required  | `IF_VehicleSpeed`   | Receives the current vehicle speed.                  |
+| `R_SeatbeltStatus`   | S/R         | Required  | `IF_SeatbeltStatus` | Receives the driver's seatbelt status.               |
+| `P_WarningLight`     | S/R         | Provided  | `IF_WarningLight`   | Sends the activation status for the warning light.   |
+| `R_EcuMode`          | Mode-Switch | Required  | `MDG_EcuMode`       | Receives the current ECU operational mode.           |
+| `P_SpeedThreshold`   | Parameter   | Provided  | `IF_SpeedThreshold` | Provides access to the speed threshold calibration.  |
+| `P_Dem_VehicleSpeed` | Diagnostic  | Provided  | `IF_Dem_VehicleSpeed` | Reports the health of the vehicle speed signal to the Dem. |
+
+***
+
+## Project Evolution
+
+This project was built incrementally, with each version adding a significant new capability.
+
+* **v1.0:** Initial implementation of the core logic and a basic test harness.
+* **v1.1:** Added **Mode Management**, making the SWC aware of the ECU's `RUN` and `SLEEP` states. This is crucial for managing power consumption and ensuring components are only active when needed.
+* **v1.2:** Introduced a **Calibration Parameter** for the speed threshold, replacing a hardcoded value. This allows the same software to be used across different vehicle models by changing parameter sets, a core principle of automotive software reuse.
+* **v1.3:** Implemented **Diagnostic Fault Reporting**, allowing the SWC to report sensor failures to the Dem (Diagnostic Event Manager). This ensures system robustness by allowing the ECU to react to hardware failures and store Diagnostic Trouble Codes (DTCs).
+* **v2.0:** Created a final, **Comprehensive Test Application** that validates all features in a single run.
 
 ***
 
 ## How to Build and Run
 
-### Dependencies
+#### Dependencies
+* A C compiler, such as **GCC** (I used the one from [MSYS2](https://www.msys2.org/) on Windows).
 
-* A C compiler, such as **GCC** (installed via [MSYS2](https://www.msys2.org/) on Windows).
-* Ensure `gcc.exe` is added to your system's PATH environment variable.
-
-### Build & Execution Steps
-
-1.  Clone the repository to your local machine.
-2.  Open a `bash` terminal in the root directory of the project.
-3.  Compile the project using the following command:
+#### Build & Execution
+1.  Clone the repository.
+2.  Open a `bash` terminal in the project's root directory.
+3.  Compile everything with the following command:
     ```bash
     gcc main.c swc/src/SeatbeltReminder_SWC.c stubs/rte_stubs.c -I swc/include/ -I stubs/ -o test_runner.exe
     ```
-4.  Run the simulation:
+4.  Run the final test application:
     ```bash
     ./test_runner.exe
     ```
-5.  **Expected Output:**
-    ```
-    --- SWC Test Runner Initialized ---
-    --- Simulating OS Tick 1 (Calling Runnable) ---
-    RTE STUB: Reading VehicleSpeed: 25 kph
-    RTE STUB: Reading IsSeatbeltFastened: FALSE
-    RTE STUB: Writing IsWarningLightActive -> TRUE
 
-    --- Simulating OS Tick 2 (Calling Runnable) ---
-    RTE STUB: Reading VehicleSpeed: 25 kph
-    RTE STUB: Reading IsSeatbeltFastened: FALSE
-    RTE STUB: Writing IsWarningLightActive -> TRUE
+#### Final Test Output (`v2.0`)
+```
+--- SWC Comprehensive Test Runner Initialized ---
 
-    --- Simulating OS Tick 3 (Calling Runnable) ---
-    RTE STUB: Reading VehicleSpeed: 25 kph
-    RTE STUB: Reading IsSeatbeltFastened: FALSE
-    RTE STUB: Writing IsWarningLightActive -> TRUE
+--- SCENARIO 1: Normal Operation --- 
+RTE STUB: Reading EcuMode: RUN 
+RTE STUB: Reading SpeedThreshold Parameter: 10 kph 
+RTE STUB: Reading VehicleSpeed: 25 kph 
+DEM STUB: Received Event ID 1 with Status: PASSED 
+RTE STUB: Reading IsSeatbeltFastened: FALSE 
+RTE STUB: Writing IsWarningLightActive -> TRUE
 
-    --- SWC Test Runner Finished ---
-    ```
+--- SCENARIO 2: ECU in Sleep Mode --- 
+RTE STUB: Reading EcuMode: SLEEP 
+RTE STUB: Writing IsWarningLightActive -> FALSE
+
+--- SCENARIO 3: Vehicle Speed Sensor Fault --- 
+RTE STUB: Reading EcuMode: RUN 
+RTE STUB: Reading SpeedThreshold Parameter: 10 kph 
+RTE STUB: Simulating fault for VehicleSpeed. Returning NO DATA. 
+DEM STUB: Received Event ID 1 with Status: FAILED
+
+--- SCENARIO 4: High Calibration Value --- 
+RTE STUB: Reading EcuMode: RUN 
+RTE STUB: Reading SpeedThreshold Parameter: 30 kph 
+RTE STUB: Reading VehicleSpeed: 25 kph 
+DEM STUB: Received Event ID 1 with Status: PASSED 
+RTE STUB: Reading IsSeatbeltFastened: FALSE 
+RTE STUB: Writing IsWarningLightActive -> FALSE
+
+--- SWC Comprehensive Test Runner Finished ---
+```
 
 ***
-
-### v1.1 - Mode Management
-* The SWC is now aware of the ECU's operational state (`ECU_RUN`, `ECU_SLEEP`).
-* Component logic is only executed when the system is in the `ECU_RUN` mode, ensuring safe and efficient operation.
-* The test harness has been updated to simulate mode switches and validate the component's state-dependent behavior.
-
-### v1.2 - Parameter Calibration
-* The hardcoded speed threshold (`5`) has been replaced with a formal calibration parameter.
-* The SWC now reads the threshold value from the RTE using the standard `Rte_Prm_` API, making the component's logic independent of the specific value.
-* This demonstrates a key automotive concept: separating software logic from calibration data for flexibility and reusability across different vehicle platforms.
-
-### v1.3 - Diagnostic Fault Reporting
-* The SWC is now robust against sensor input failures.
-* It monitors the return status of the `Rte_Read` API call for the vehicle speed sensor.
-* If the reading fails, it reports a `FAILED` status to the Diagnostic Event Manager (Dem). On success, it reports `PASSED`.
-* Demonstrates AUTOSAR diagnostics, fault detection, and robust error handling.
