@@ -12,7 +12,7 @@ The entire project was developed in a virtual environment, without any physical 
 
 ***
 
-## My Development & Testing Strategy
+## Development & Testing Strategy
 
 To simulate the environment, I structured the project into three distinct parts, each with a clear role:
 
