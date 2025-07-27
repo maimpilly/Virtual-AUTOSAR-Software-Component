@@ -87,15 +87,18 @@ DEM STUB: Received Event ID 1 with Status: PASSED
 RTE STUB: Reading IsSeatbeltFastened: FALSE 
 RTE STUB: Writing IsWarningLightActive -> TRUE
 
+----------------------------------------
+
 --- SCENARIO 2: ECU in Sleep Mode --- 
 RTE STUB: Reading EcuMode: SLEEP 
-RTE STUB: Writing IsWarningLightActive -> FALSE
+----------------------------------------
 
 --- SCENARIO 3: Vehicle Speed Sensor Fault --- 
 RTE STUB: Reading EcuMode: RUN 
 RTE STUB: Reading SpeedThreshold Parameter: 10 kph 
 RTE STUB: Simulating fault for VehicleSpeed. Returning NO DATA. 
 DEM STUB: Received Event ID 1 with Status: FAILED
+----------------------------------------
 
 --- SCENARIO 4: High Calibration Value --- 
 RTE STUB: Reading EcuMode: RUN 
@@ -105,7 +108,27 @@ DEM STUB: Received Event ID 1 with Status: PASSED
 RTE STUB: Reading IsSeatbeltFastened: FALSE 
 RTE STUB: Writing IsWarningLightActive -> FALSE
 
+----------------------------------------
+
 --- SWC Comprehensive Test Runner Finished ---
 ```
 
 ***
+
+### Build & Execution Steps
+
+This project uses CMake to manage the build process.
+
+1.  Clone the repository.
+2.  Open a terminal in the project's root directory.
+3.  **Configure the project** by creating a build directory:
+    ```bash
+    cmake -B build
+    ```
+4.  **Compile the project** using the generated build files:
+    ```bash
+    cmake --build build
+    ```
+5.  **Run the executable**, which is now located inside the `build` directory:
+    ```bash
+    ./build/autosar_test
